@@ -7,7 +7,7 @@ os.environ['AWS_DEFAULT_REGION'] = 'us-west-2'
 client = boto3.client('s3')
 
 
-def create(uri):
+def create(uri, cost_code):
     try:
         client.create_bucket(
             Bucket=uri,
@@ -27,10 +27,20 @@ def create(uri):
         }
     )
 
+    client.put_public_access_block(
+        Bucket=uri,
+        PublicAccessBlockConfiguration={
+            'BlockPublicAcls': True,
+            'IgnorePublicAcls': True,
+            'BlockPublicPolicy': True,
+            'RestrictPublicBuckets': True
+        }
+    )
+
 
 def delete(uri):
     pass
 
 
 bucket_name = '1999-aaa'
-create(bucket_name)
+create(bucket_name, 'T001')
